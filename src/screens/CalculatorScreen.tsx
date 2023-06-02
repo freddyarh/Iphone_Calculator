@@ -9,6 +9,7 @@ export const CalculatorScreen = () => {
   const {
       number,
       numberBefore,
+      btnResult,
       clean,
       positiveNegative,
       btnDel,
@@ -63,7 +64,7 @@ export const CalculatorScreen = () => {
         <View style={ styles.fila }>
           <BotonCalculator texto="0" accion={ createNumber } ancho/>
           <BotonCalculator texto="."  accion={ createNumber }/>
-          <BotonCalculator texto="=" color="#FF9427"  accion={ result }/>
+          <BotonCalculator texto="=" color="#FF9427"  accion={ result } btnResult={ btnResult }/>
         </View>
     </View>
   )

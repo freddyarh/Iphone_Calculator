@@ -8,6 +8,7 @@ export const useCalculator = () => {
 
     const [number, setNumber] = useState('100');
     const [numberBefore, setNumberBefore] = useState('0');
+    const [btnResult, setBtnResult] = useState(false);
   
     const lastOperation = useRef<Operators>();
   
@@ -17,6 +18,7 @@ export const useCalculator = () => {
     }
   
     const createNumber = ( numberText: string ) => {
+        setBtnResult(false);
   
       if( number.includes('.') && numberText === '.' ) return;
   
@@ -92,32 +94,34 @@ export const useCalculator = () => {
     }
   
     const result = () => {
+        
+        const num1 = Number(number);
+        const num2 = Number(numberBefore);
+        
+        switch ( lastOperation.current ) {
+            case Operators.add:
+                setNumber(`${num2 + num1}`);
+            break;
+            case Operators.sub:
+                setNumber(`${num2 - num1}`);
+            break;
+            case Operators.mul:
+                setNumber(`${num2 * num1}`);
+            break;
+            case Operators.spl:
+                setNumber(`${num2 / num1}`);
+            break;
+        }
   
-      const num1 = Number(number);
-      const num2 = Number(numberBefore);
-  
-      switch ( lastOperation.current ) {
-        case Operators.add:
-            setNumber(`${num2 + num1}`);
-          break;
-        case Operators.sub:
-            setNumber(`${num2 - num1}`);
-          break;
-        case Operators.mul:
-            setNumber(`${num2 * num1}`);
-          break;
-        case Operators.spl:
-            setNumber(`${num2 / num1}`);
-          break;
-      }
-  
-      setNumberBefore('0');
+        setNumberBefore('0');
+        setBtnResult(true);
   
     }
 
     return {
         number,
         numberBefore,
+        btnResult,
         clean,
         positiveNegative,
         btnDel,
