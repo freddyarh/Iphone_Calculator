@@ -3,15 +3,20 @@ import { Text, View } from "react-native";
 import { BotonCalculator } from "../components/BotonCalculator";
 import { styles } from "../theme/appTheme";
 
+enum Operators {
+  add, sub, mul, spl
+}
+
 export const CalculatorScreen = () => {
 
   const [number, setNumber] = useState('100');
   const [numberBefore, setNumberBefore] = useState('0');
 
-  const ref = useRef();
+  const lastOperation = useRef<Operators>();
 
   const clean = () => {
     setNumber('0');
+    setNumberBefore('0');
   }
 
   const createNumber = ( numberText: string ) => {
@@ -71,9 +76,56 @@ export const CalculatorScreen = () => {
     setNumber( '0' );
   }
 
+  const btnAdd = () => {
+    changeNumtoBefore();
+    lastOperation.current = Operators.add;
+    console.log(lastOperation.current)
+  }
+  const btnSub = () => {
+    changeNumtoBefore();
+    lastOperation.current = Operators.sub;
+  }
+  const btnMul = () => {
+    changeNumtoBefore();
+    lastOperation.current = Operators.mul;
+  }
+  const btnSpl = () => {
+    changeNumtoBefore();
+    lastOperation.current = Operators.spl;
+  }
+
+  const result = () => {
+
+    const num1 = Number(number);
+    const num2 = Number(numberBefore);
+
+    switch ( lastOperation.current ) {
+      case Operators.add:
+          setNumber(`${num2 + num1}`);
+        break;
+      case Operators.sub:
+          setNumber(`${num2 - num1}`);
+        break;
+      case Operators.mul:
+          setNumber(`${num2 * num1}`);
+        break;
+      case Operators.spl:
+          setNumber(`${num2 / num1}`);
+        break;
+    
+      default:
+        break;
+    }
+
+    setNumberBefore('0');
+
+  }
+
   return (
     <View style={ styles.calculadoraContainer }>
+      { numberBefore !== '0'  && (
         <Text style={ styles.resultadoPequeno }>{ numberBefore }</Text>
+      )}
         <Text 
           style={ styles.resultado }
           numberOfLines={ 1 }
@@ -85,34 +137,34 @@ export const CalculatorScreen = () => {
           <BotonCalculator texto="C" color="#9B9B9B" accion={ clean } />
           <BotonCalculator texto="+/-" color="#9B9B9B" accion={ positiveNegative }/>
           <BotonCalculator texto="del" color="#9B9B9B"  accion={ btnDel }/>
-          <BotonCalculator texto="/" color="#FF9427"  accion={ changeNumtoBefore }/>
+          <BotonCalculator texto="/" color="#FF9427"  accion={ btnSpl }/>
         </View>
 
         <View style={ styles.fila }>
           <BotonCalculator texto="7"  accion={ createNumber }/>
           <BotonCalculator texto="8"  accion={ createNumber }/>
           <BotonCalculator texto="9"  accion={ createNumber }/>
-          <BotonCalculator texto="X" color="#FF9427" accion={ changeNumtoBefore }/>
+          <BotonCalculator texto="X" color="#FF9427" accion={ btnMul }/>
         </View>
         
         <View style={ styles.fila }>
           <BotonCalculator texto="4"  accion={ createNumber }/>
           <BotonCalculator texto="5"  accion={ createNumber }/>
           <BotonCalculator texto="6"  accion={ createNumber }/>
-          <BotonCalculator texto="-" color="#FF9427" accion={ changeNumtoBefore }/>
+          <BotonCalculator texto="-" color="#FF9427" accion={ btnSub }/>
         </View>
 
         <View style={ styles.fila }>
           <BotonCalculator texto="1"  accion={ createNumber }/>
           <BotonCalculator texto="2"  accion={ createNumber }/>
           <BotonCalculator texto="3"  accion={ createNumber }/>
-          <BotonCalculator texto="+" color="#FF9427" accion={ changeNumtoBefore }/>
+          <BotonCalculator texto="+" color="#FF9427" accion={ btnAdd }/>
         </View>
 
         <View style={ styles.fila }>
           <BotonCalculator texto="0" accion={ createNumber } ancho/>
           <BotonCalculator texto="."  accion={ createNumber }/>
-          <BotonCalculator texto="=" color="#FF9427"  accion={ createNumber }/>
+          <BotonCalculator texto="=" color="#FF9427"  accion={ result }/>
         </View>
     </View>
   )
